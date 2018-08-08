@@ -1,10 +1,19 @@
 package com.lribeiro.csbi.domain;
 
 import java.io.Serializable;
+//Sempre importar o javax
+import javax.persistence.Entity; 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity //Indica que deve-se criar uma tabela para esta classe
 public class Categoria implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	@Id //Indica qual será a chave primária
+	@GeneratedValue(strategy=GenerationType.IDENTITY) //Indica que a chave primária será gerada automaticamente baseado na estratégia
 	private Integer id;
 	private String nome;
 	
