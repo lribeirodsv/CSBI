@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity 															//Indica que deve-se criar uma tabela para esta classe
 public class Produto implements Serializable {
 
@@ -24,6 +26,7 @@ public class Produto implements Serializable {
 	private String nome;
 	private Double preco;
 	
+	@JsonBackReference												//Indica que os objetos foram buscados do outro lado da relação
 	@ManyToMany 													//Relacionamento n para n
 	@JoinTable
 	(
