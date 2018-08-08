@@ -1,11 +1,15 @@
 package com.lribeiro.csbi.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 //Sempre importar o javax
 import javax.persistence.Entity; 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity //Indica que deve-se criar uma tabela para esta classe
 public class Categoria implements Serializable {
@@ -16,6 +20,9 @@ public class Categoria implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY) //Indica que a chave primária será gerada automaticamente baseado na estratégia
 	private Integer id;
 	private String nome;
+
+	@ManyToMany(mappedBy="categorias") 													//Indica que esta relação n/n ja foi mapeada no atributo "categorias"
+	private List<Produto> produtos = new ArrayList<>();
 	
 	public Categoria() {
 	}
@@ -42,7 +49,15 @@ public class Categoria implements Serializable {
 		this.nome = nome;
 	}
 	
+	public List<Produto> getProdutos() {
+		return produtos;
+	}
 
+	public void setProdutos(List<Produto> produtos) {
+		this.produtos = produtos;
+	}
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
