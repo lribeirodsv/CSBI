@@ -6,20 +6,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import com.lribeiro.csbi.domain.Categoria;
-import com.lribeiro.csbi.services.CategoriaService;
+
+import com.lribeiro.csbi.domain.Cliente;
+import com.lribeiro.csbi.services.ClienteService;
 
 @RestController
-@RequestMapping(value="/categorias")
-public class CategoriaResource {
+@RequestMapping(value="/clientes")
+public class ClienteResource {
 
 	@Autowired
-	private CategoriaService servCategoria;
+	private ClienteService servCliente;
 	
-	@RequestMapping(value="/{id}", method=RequestMethod.GET)  			//endpoint sera /categorias/id sendo que id é um parametro
+	@RequestMapping(value="/{id}", method=RequestMethod.GET)  			//endpoint sera /clientes/id sendo que id é um parametro
 	public ResponseEntity<?> listar(@PathVariable Integer id) {       	//armazena informacoes de uma resposta HTTP para um servico REST
 		
-		Categoria obj = servCategoria.buscaCategoria(id);
+		Cliente obj = servCliente.buscaCliente(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
