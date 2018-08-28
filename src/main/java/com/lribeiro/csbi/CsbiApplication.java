@@ -1,5 +1,6 @@
 package com.lribeiro.csbi;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,20 @@ import com.lribeiro.csbi.domain.Cidade;
 import com.lribeiro.csbi.domain.Cliente;
 import com.lribeiro.csbi.domain.Endereco;
 import com.lribeiro.csbi.domain.Estado;
+import com.lribeiro.csbi.domain.Pagamento;
+import com.lribeiro.csbi.domain.PagamentoBoleto;
+import com.lribeiro.csbi.domain.PagamentoCartao;
+import com.lribeiro.csbi.domain.Pedido;
 import com.lribeiro.csbi.domain.Produto;
+import com.lribeiro.csbi.domain.enums.EstadoPagamento;
 import com.lribeiro.csbi.domain.enums.TipoCliente;
 import com.lribeiro.csbi.repositories.CategoriaRepository;
 import com.lribeiro.csbi.repositories.CidadeRepository;
 import com.lribeiro.csbi.repositories.ClienteRepository;
 import com.lribeiro.csbi.repositories.EnderecoRepository;
 import com.lribeiro.csbi.repositories.EstadoRepository;
+import com.lribeiro.csbi.repositories.PagamentoRepository;
+import com.lribeiro.csbi.repositories.PedidoRepository;
 import com.lribeiro.csbi.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -41,6 +49,13 @@ public class CsbiApplication implements CommandLineRunner {	               //Com
 	
 	@Autowired
 	private EnderecoRepository repoEndereco;
+	
+	@Autowired
+	private PedidoRepository repoPedido;
+	
+	@Autowired
+	private PagamentoRepository repoPagamento;
+	
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CsbiApplication.class, args);
@@ -68,6 +83,19 @@ public class CsbiApplication implements CommandLineRunner {	               //Com
 		Endereco end1 = new Endereco(null, "Rua Flores", "300", "Apto 303", "Jardim", "38220834", cli1, cid1);				//Instancia um objeto Endereco
 		Endereco end2 = new Endereco(null, "Avenida Matos", "105", "Sala 800", "Centro", "38777012", cli1, cid2);				//Instancia um objeto Endereco
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		
+		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, end1);
+		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017 19:35"), cli1, end2);
+		
+		Pagamento pgto1 = new PagamentoCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		Pagamento pgto2 = new PagamentoBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 00:00"), null);
+		
+		ped1.setPagamento(pgto1);
+		ped2.setPagamento(pgto2);
+		
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+		
 		cat1.getProdutos().addAll(Arrays.asList(prod1, prod2, prod3));		//Incluindo os produtos nas listas de produtos da categoria (relacionamento virtual) 
 		cat2.getProdutos().addAll(Arrays.asList(prod2));					//Incluindo os produtos nas listas de produtos da categoria (relacionamento virtual)
 		
@@ -81,12 +109,17 @@ public class CsbiApplication implements CommandLineRunner {	               //Com
 		cli1.getTelefones().addAll(Arrays.asList("27363323","93838393"));	//Adiciona telefones ao cliente
 		cli1.getEnderecos().addAll(Arrays.asList(end1, end2));  				//Adiciona enderecos ao cliente
 		
+		
+		
+		
 		repoCategoria.saveAll(Arrays.asList(cat1, cat2)); 					//Salva as categorias no banco de dados
 		repoProduto.saveAll(Arrays.asList(prod1, prod2, prod3)); 			//Salva os produtos no banco de dados
 		repoEstado.saveAll(Arrays.asList(est1, est2));						//Salva os estados no banco de dados (os estados tem que vir primeiro devido a integridade referencial)
 		repoCidade.saveAll(Arrays.asList(cid1, cid2, cid3)); 				//Salva as cidades no banco de dados
-		repoCliente.saveAll(Arrays.asList(cli1));
-		repoEndereco.saveAll(Arrays.asList(end1, end2));
+		repoCliente.saveAll(Arrays.asList(cli1));							//Salva os clientes no banco de dados
+		repoEndereco.saveAll(Arrays.asList(end1, end2));					//Salva os enderecos no banco de dados
+		repoPedido.saveAll(Arrays.asList(ped1, ped2));						//Salva os pedidos no banco de dados		
+		repoPagamento.saveAll(Arrays.asList(pgto1, pgto2));					//Salva os pagamentos no banco de dados		
 		
 	}
 }
