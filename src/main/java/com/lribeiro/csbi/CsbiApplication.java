@@ -13,6 +13,7 @@ import com.lribeiro.csbi.domain.Cidade;
 import com.lribeiro.csbi.domain.Cliente;
 import com.lribeiro.csbi.domain.Endereco;
 import com.lribeiro.csbi.domain.Estado;
+import com.lribeiro.csbi.domain.ItemPedido;
 import com.lribeiro.csbi.domain.Pagamento;
 import com.lribeiro.csbi.domain.PagamentoBoleto;
 import com.lribeiro.csbi.domain.PagamentoCartao;
@@ -25,6 +26,7 @@ import com.lribeiro.csbi.repositories.CidadeRepository;
 import com.lribeiro.csbi.repositories.ClienteRepository;
 import com.lribeiro.csbi.repositories.EnderecoRepository;
 import com.lribeiro.csbi.repositories.EstadoRepository;
+import com.lribeiro.csbi.repositories.ItemPedidoRepository;
 import com.lribeiro.csbi.repositories.PagamentoRepository;
 import com.lribeiro.csbi.repositories.PedidoRepository;
 import com.lribeiro.csbi.repositories.ProdutoRepository;
@@ -56,6 +58,8 @@ public class CsbiApplication implements CommandLineRunner {	               //Com
 	@Autowired
 	private PagamentoRepository repoPagamento;
 	
+	@Autowired
+	private ItemPedidoRepository repoItemPedido;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CsbiApplication.class, args);
@@ -91,27 +95,37 @@ public class CsbiApplication implements CommandLineRunner {	               //Com
 		Pagamento pgto1 = new PagamentoCartao(null, EstadoPagamento.QUITADO, ped1, 6);
 		Pagamento pgto2 = new PagamentoBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 00:00"), null);
 		
-		ped1.setPagamento(pgto1);
-		ped2.setPagamento(pgto2);
+		ItemPedido item1 = new ItemPedido(ped1, prod1, 0.00, 1, 2000.00);
+		ItemPedido item2 = new ItemPedido(ped1, prod3, 0.00, 2, 80.00);
+		ItemPedido item3 = new ItemPedido(ped2, prod2, 100.00, 1, 800.00);
 		
-		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+		ped1.setPagamento(pgto1);											//Seta o pagamento do pedido
+		ped1.getItens().addAll(Arrays.asList(item1, item2));				//Associa os itens ao pedido
+		
+		ped2.setPagamento(pgto2);											//Seta o pagamento do pedido
+		ped1.getItens().addAll(Arrays.asList(item3));						//Associa os itens ao pedido
+				
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));				//Associa os pedidos ao cliente
 		
 		cat1.getProdutos().addAll(Arrays.asList(prod1, prod2, prod3));		//Incluindo os produtos nas listas de produtos da categoria (relacionamento virtual) 
 		cat2.getProdutos().addAll(Arrays.asList(prod2));					//Incluindo os produtos nas listas de produtos da categoria (relacionamento virtual)
 		
 		prod1.getCategorias().addAll(Arrays.asList(cat1));					//Incluindo as categorias nas listas de categorias do produto (relacionamento virtual)
+		prod1.getItens().addAll(Arrays.asList(item1));						//Associa itens de pedido ao produto
+		
 		prod2.getCategorias().addAll(Arrays.asList(cat1, cat2));			//Incluindo as categorias nas listas de categorias do produto (relacionamento virtual)
+		prod2.getItens().addAll(Arrays.asList(item3));						//Associa itens de pedido ao produto
+		
 		prod3.getCategorias().addAll(Arrays.asList(cat1));					//Incluindo as categorias nas listas de categorias do produto (relacionamento virtual)
+		prod3.getItens().addAll(Arrays.asList(item2));						//Associa itens de pedido ao produto
 		
 		est1.getCidades().addAll(Arrays.asList(cid1));						//Incluindo as cidades nas listas de cidades do estado (relacionamento virtual)
 		est2.getCidades().addAll(Arrays.asList(cid2, cid3));				//Incluindo as cidades nas listas de cidades do estado (relacionamento virtual)
 		
 		cli1.getTelefones().addAll(Arrays.asList("27363323","93838393"));	//Adiciona telefones ao cliente
-		cli1.getEnderecos().addAll(Arrays.asList(end1, end2));  				//Adiciona enderecos ao cliente
+		cli1.getEnderecos().addAll(Arrays.asList(end1, end2));  			//Adiciona enderecos ao cliente
 		
-		
-		
-		
+	
 		repoCategoria.saveAll(Arrays.asList(cat1, cat2)); 					//Salva as categorias no banco de dados
 		repoProduto.saveAll(Arrays.asList(prod1, prod2, prod3)); 			//Salva os produtos no banco de dados
 		repoEstado.saveAll(Arrays.asList(est1, est2));						//Salva os estados no banco de dados (os estados tem que vir primeiro devido a integridade referencial)
@@ -120,6 +134,6 @@ public class CsbiApplication implements CommandLineRunner {	               //Com
 		repoEndereco.saveAll(Arrays.asList(end1, end2));					//Salva os enderecos no banco de dados
 		repoPedido.saveAll(Arrays.asList(ped1, ped2));						//Salva os pedidos no banco de dados		
 		repoPagamento.saveAll(Arrays.asList(pgto1, pgto2));					//Salva os pagamentos no banco de dados		
-		
+		repoItemPedido.saveAll(Arrays.asList(item1, item2, item3));			//Salva os itens do pedido no banco de dados
 	}
 }
