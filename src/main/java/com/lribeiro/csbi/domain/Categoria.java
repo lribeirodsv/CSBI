@@ -11,8 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity 																				//Indica que deve-se criar uma tabela para esta classe
 public class Categoria implements Serializable {
 
@@ -23,7 +21,6 @@ public class Categoria implements Serializable {
 	private Integer id;
 	private String nome;
 
-	@JsonManagedReference																//Indica que os objetos devem ser buscados neste lado da relação para evitar o loop 
 	@ManyToMany(mappedBy="categorias") 													//Indica que esta relação n/n ja foi mapeada no atributo "categorias"
 	private List<Produto> produtos = new ArrayList<>();
 	

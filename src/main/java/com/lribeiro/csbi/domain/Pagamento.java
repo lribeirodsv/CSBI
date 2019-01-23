@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lribeiro.csbi.domain.enums.EstadoPagamento;
 
 @Entity
@@ -23,7 +23,7 @@ public abstract class Pagamento implements Serializable {
 	private Integer id;
 	private Integer estado;
 	
-	@JsonBackReference 											//Nao permite que seja serializado, ou seja, o pagamento nao encherga o pedido
+	@JsonIgnore 											//Nao permite que seja serializado, ou seja, o pagamento nao encherga o pedido
 	@OneToOne
 	@JoinColumn(name="pedido_id")
 	@MapsId
