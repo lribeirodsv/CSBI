@@ -22,9 +22,9 @@ public class CategoriaResource {
 	private CategoriaService servCategoria;
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)  			//endpoint sera /categorias/id sendo que id é um parametro
-	public ResponseEntity<?> listar(@PathVariable Integer id) {       	//armazena informacoes de uma resposta HTTP para um servico REST
+	public ResponseEntity<Categoria> listar(@PathVariable Integer id) {       	//armazena informacoes de uma resposta HTTP para um servico REST
 		
-		Categoria obj = servCategoria.buscaCategoria(id);
+		Categoria obj = servCategoria.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
@@ -35,6 +35,14 @@ public class CategoriaResource {
 				.path("/{id}").buildAndExpand(obj.getId()).toUri();
 		
 		return ResponseEntity.created(uri).build();
+	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
+	public ResponseEntity<Void> Update(@RequestBody Categoria obj, @PathVariable Integer id){
+		obj.setId(id);
+		obj = servCategoria.update(obj);
+		
+		return ResponseEntity.noContent().build();
 	}
 	
 }
