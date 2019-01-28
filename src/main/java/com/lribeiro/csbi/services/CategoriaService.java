@@ -19,5 +19,10 @@ public class CategoriaService {
 		Optional<Categoria> obj = repoCategoria.findById(id); 									//Optional é um objeto container que vai carregar um objeto do tipo Categoria e encapsula o objeto ter sido instanciado ou nao
 		return obj.orElseThrow(() -> new ObjectNotFoundException( 						  		//Caso encontre a categoria a partir do id, retorna o objeto, caso nao encontre, retorna null   
 			"Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));		//Chamo a excessão personalizada e passo a mensagem
-	}	
+	}
+	
+	public Categoria insert(Categoria obj) {
+		obj.setId(null);
+		return repoCategoria.save(obj);
+	}
 }
