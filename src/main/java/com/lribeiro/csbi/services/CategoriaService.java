@@ -1,5 +1,6 @@
 package com.lribeiro.csbi.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,10 @@ public class CategoriaService {
 			Optional<Categoria> obj = repoCategoria.findById(id);
 			throw new DataIntegrityException("Não é possível excluir a categoria " + "'" + obj.get().getNome() + "'" + " pois a mesma possui produtos");
 		}
+	}
+
+	public List<Categoria> findAll() {
+		return repoCategoria.findAll();
 	}
 }
 

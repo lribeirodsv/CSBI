@@ -1,6 +1,8 @@
 package com.lribeiro.csbi.resources;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.lribeiro.csbi.domain.Categoria;
+import com.lribeiro.csbi.dto.CategoriaDTO;
 import com.lribeiro.csbi.services.CategoriaService;
 
 @RestController
@@ -50,6 +53,22 @@ public class CategoriaResource {
 		servCategoria.delete(id);
 		
 		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(method=RequestMethod.GET)  							//endpoint sera /categorias
+	public ResponseEntity<List<CategoriaDTO>> findAll() {       			
+		
+		List<Categoria> list = servCategoria.findAll();
+		
+		/*
+		stream  = metodo que percorre uma lista
+		map     = realiza uma operacao para cada elemento da lista
+		->      = funcao anonima
+		collect = volta a colecao de objetos pro tipo lista
+		*/
+		List<CategoriaDTO> listDto = list.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList());
+		
+		return ResponseEntity.ok().body(listDto);
 	}
 	
 }
