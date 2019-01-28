@@ -18,7 +18,7 @@ public class ClienteResource {
 	private ClienteService servCliente;
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)  			//endpoint sera /clientes/id sendo que id é um parametro
-	public ResponseEntity<Cliente> listar(@PathVariable Integer id) {       	//armazena informacoes de uma resposta HTTP para um servico REST
+	public ResponseEntity<Cliente> find(@PathVariable Integer id) {       	//armazena informacoes de uma resposta HTTP para um servico REST
 		
 		Cliente obj = servCliente.find(id);
 		return ResponseEntity.ok().body(obj);

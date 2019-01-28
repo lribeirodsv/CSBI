@@ -22,14 +22,14 @@ public class CategoriaResource {
 	private CategoriaService servCategoria;
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)  			//endpoint sera /categorias/id sendo que id é um parametro
-	public ResponseEntity<Categoria> listar(@PathVariable Integer id) {       	//armazena informacoes de uma resposta HTTP para um servico REST
+	public ResponseEntity<Categoria> find(@PathVariable Integer id) {       	//armazena informacoes de uma resposta HTTP para um servico REST
 		
 		Categoria obj = servCategoria.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)							//define o metodo como POST
-	public ResponseEntity<Void> Insert(@RequestBody Categoria obj){		
+	public ResponseEntity<Void> insert(@RequestBody Categoria obj){		
 		obj = servCategoria.insert(obj);								//apos a insersao retorna o objeto
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()		//cria a uri do novo objeto inserido já com sua nova id gerada
 				.path("/{id}").buildAndExpand(obj.getId()).toUri();
@@ -38,9 +38,16 @@ public class CategoriaResource {
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
-	public ResponseEntity<Void> Update(@RequestBody Categoria obj, @PathVariable Integer id){
+	public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id){
 		obj.setId(id);
 		obj = servCategoria.update(obj);
+		
+		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable Integer id){
+		servCategoria.delete(id);
 		
 		return ResponseEntity.noContent().build();
 	}

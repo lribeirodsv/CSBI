@@ -17,7 +17,7 @@ public class PedidoResource {
 	private PedidoService servPedido;
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)  			//endpoint sera /pedidos/id sendo que id é um parametro
-	public ResponseEntity<Pedido> listar(@PathVariable Integer id) {       	//armazena informacoes de uma resposta HTTP para um servico REST
+	public ResponseEntity<Pedido> find(@PathVariable Integer id) {       	//armazena informacoes de uma resposta HTTP para um servico REST
 		
 		Pedido obj = servPedido.find(id);
 		return ResponseEntity.ok().body(obj);

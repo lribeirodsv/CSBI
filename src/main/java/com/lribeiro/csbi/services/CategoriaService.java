@@ -1,13 +1,15 @@
 package com.lribeiro.csbi.services;
 
-import com.lribeiro.csbi.domain.Categoria;
-import com.lribeiro.csbi.repositories.CategoriaRepository;
-import com.lribeiro.csbi.services.exceptions.ObjectNotFoundException;
-
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import com.lribeiro.csbi.domain.Categoria;
+import com.lribeiro.csbi.repositories.CategoriaRepository;
+import com.lribeiro.csbi.services.exceptions.DataIntegrityException;
+import com.lribeiro.csbi.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class CategoriaService {
@@ -29,6 +31,16 @@ public class CategoriaService {
 	public Categoria update(Categoria obj) {
 		find(obj.getId());
 		return repoCategoria.save(obj);
+	}
+
+	public void delete(Integer id) {
+		find(id);
+		try {
+			repoCategoria.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			Optional<Categoria> obj = repoCategoria.findById(id);
+			throw new DataIntegrityException("Não é possível excluir a categoria " + "'" + obj.get().getNome() + "'" + " pois a mesma possui produtos");
+		}
 	}
 }
 
